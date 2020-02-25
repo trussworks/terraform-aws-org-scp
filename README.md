@@ -1,48 +1,79 @@
-# Truss Terraform Module template
+Inspired by the great work documenting AWS security practices in [asecure.cloud](https://asecure.cloud/whatsnew), this module is meant to define common Service Control Policies (SCP) to apply to accounts or Organizational Units (OU) in an AWS Organization. The following policies are supported
 
-This repository is meant to be a template repo we can just spin up new module repos from with our general format.
-
-## Creating a new Terraform Module
-
-1. Clone this repo, renaming appropriately.
-1. Write your terraform code in the root dir.
-1. Create an example of the module in use in the `examples` dir.
-1. Ensure you've completed the [Developer Setup](#developer-setup).
-1. Write terratests in the `test` dir.
-1. [With slight modification from the Terratest docs](https://github.com/gruntwork-io/terratest#setting-up-your-project): In the root dir, run `go mod init MODULE_NAME` to get a new go.mod file. Then run `go mod tidy` to download terratest.
-1. Run your tests to ensure they work as expected using instructions below.
-
-## Actual readme below  - Delete above here
-
-Please put a description of what this module does here
-
-## Terraform Versions
-
-_This is how we're managing the different versions._
-Terraform 0.12. Pin module version to ~> 2.0. Submit pull-requests to master branch.
-
-Terraform 0.11. Pin module version to ~> 1.0. Submit pull-requests to terraform011 branch.
+* Deny the root user from taking any action
+* Deny the ability for an AWS account to leave an AWS organization
+* Deny the ability to create IAM users and access keys in an AWS account
+* Deny the ability to delete KMS keys
+* Deny the ability to delete Route53 zones
+* Deny all access to an AWS account
 
 ## Usage
 
-### Put an example usage of the module here
-
 ```hcl
-module "example" {
-  source = "terraform/registry/path"
+resource "aws_organizations_organizational_unit" "root" {
+  name      = "root"
+  parent_id = aws_organizations_organization.main.roots.0.id
+}
 
-  <variables>
+resource "aws_organizations_organizational_unit" "id_destination" {
+  name      = "id-destination"
+  parent_id = aws_organizations_organizational_unit.root.id
+}
+
+resource "aws_organizations_organizational_unit" "prod" {
+  name      = "prod"
+  parent_id = aws_organizations_organizational_unit.id_destination.id
+}
+
+resource "aws_organizations_organizational_unit" "suspended" {
+  depends_on = [aws_organizations_organization.main]
+
+  name      = "suspended"
+  parent_id = aws_organizations_organizational_unit.root.id
+}
+
+module "org_scps" {
+  source = "../../../terraform-aws-org-scp"
+
+  # applies to all accounts
+  # - don't allow all accounts to be able to leave the org
+  # - don't allow access to the root user
+  deny_root_account_target_ids = [aws_organizations_organizational_unit.root.id]
+  deny_leaving_orgs_target_ids = [aws_organizations_organizational_unit.root.id]
+
+  # applies to accounts that are not managing IAM users
+  # - don't allow creating IAM users or access keys
+  deny_creating_iam_users_target_ids = [aws_organizations_organizational_unit.id_destination.id]
+
+  # applies to all prod accounts
+  # - don't allow deleting KMS keys
+  # - don't allow deleting Route53 zones
+  deny_deleting_kms_keys_target_ids      = [aws_organizations_organizational_unit.prod.id]
+  deny_deleting_route53_zones_target_ids = [aws_organizations_organizational_unit.prod.id]
+
+  # applies to all suspended accounts
+  # - don't allow any access
+  deny_all_access_target_ids = [aws_organizations_organizational_unit.suspended.id]
 }
 ```
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Providers
 
-No provider.
+| Name | Version |
+|------|---------|
+| aws | n/a |
 
 ## Inputs
 
-No input.
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:-----:|
+| deny\_all\_access\_target\_ids | Target ids (AWS Account or Organizational Unit) to attach an SCP dening all access | `list(string)` | `[]` | no |
+| deny\_creating\_iam\_users\_target\_ids | Target ids (AWS Account or Organizational Unit) to attach an SCP denying the ability to create IAM users or Access Keys | `list(string)` | `[]` | no |
+| deny\_deleting\_kms\_keys\_target\_ids | Target ids (AWS Account or Organizational Unit) to attach an SCP denying deleting KMS keys | `list(string)` | `[]` | no |
+| deny\_deleting\_route53\_zones\_target\_ids | Target ids (AWS Account or Organizational Unit) to attach an SCP denying deleting Route53 Hosted Zones | `list(string)` | `[]` | no |
+| deny\_leaving\_orgs\_target\_ids | Target ids (AWS Account or Organizational Unit) to attach an SCP denying the ability to leave the AWS Organization | `list(string)` | `[]` | no |
+| deny\_root\_account\_target\_ids | Target ids (AWS Account or Organizational Unit) to attach an SCP denying the root user from taking any action | `list(string)` | `[]` | no |
 
 ## Outputs
 
@@ -55,22 +86,6 @@ No output.
 Install dependencies (macOS)
 
 ```shell
-brew install pre-commit go terraform terraform-docs
+brew install pre-commit terraform terraform-docs
 pre-commit install --install-hooks
-```
-
-### Testing
-
-[Terratest](https://github.com/gruntwork-io/terratest) is being used for
-automated testing with this module. Tests in the `test` folder can be run
-locally by running the following command:
-
-```text
-make test
-```
-
-Or with aws-vault:
-
-```text
-AWS_VAULT_KEYCHAIN_NAME=<NAME> aws-vault exec <PROFILE> -- make test
 ```
