@@ -166,8 +166,10 @@ resource "aws_organizations_policy_attachment" "deny_all_access" {
 # Require S3 encryption
 #
 
+# https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_example-scps.html#example-require-encryption
 data "aws_iam_policy_document" "require_s3_encryption" {
   statement {
+    sid       = "deny-incorrect-encryption-header"
     effect    = "Deny"
     actions   = ["s3:PutObject"]
     resources = ["*"]
@@ -178,13 +180,14 @@ data "aws_iam_policy_document" "require_s3_encryption" {
     }
   }
   statement {
+    sid       = "deny-unencrypted-object-uploads"
     effect    = "Deny"
     actions   = ["s3:PutObject"]
     resources = ["*"]
     condition {
-      test     = "Bool"
+      test     = "Null"
       variable = "s3:x-amz-server-side-encryption"
-      values   = [false]
+      values   = [true]
     }
   }
 }
