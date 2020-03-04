@@ -229,5 +229,5 @@ resource "aws_organizations_policy_attachment" "deny_deleting_cloudwatch_logs" {
   count = length(var.deny_deleting_cloudwatch_logs_target_ids)
 
   policy_id = aws_organizations_policy.deny_deleting_cloudwatch_logs.id
-  target_id = element(var.deny_deleting_cloudwatch_logs_target_ids)
+  target_id = element(var.deny_deleting_cloudwatch_logs_target_ids.*, count.index)
 }
