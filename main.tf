@@ -202,3 +202,32 @@ resource "aws_organizations_policy_attachment" "require_s3_encryption" {
   policy_id = aws_organizations_policy.require_s3_encryption.id
   target_id = element(var.require_s3_encryption_target_ids.*, count.index)
 }
+
+#
+# Deny deleting VPC Flow logs, cloudwatch log groups, and cloudwatch log streams
+#
+
+data "aws_iam_policy_document" "deny_deleting_cloudwatch_logs" {
+  statement {
+    effect = "Deny"
+    actions = [
+      "ec2:DeleteFlowLogs",
+      "logs:DeleteLogGroup",
+      "logs:DeleteLogStream"
+    ]
+    resources = ["*"]
+  }
+}
+
+resource "aws_organizations_policy" "deny_deleting_cloudwatch_logs" {
+  name        = "deny-deleting-cloudwatch-logs"
+  description = "Deny deleting Cloudwatch log groups, log streams, and VPC flow logs"
+  content     = data.aws_iam_policy_document.deny_deleting_cloudwatch_logs
+}
+
+resource "aws_organizations_policy_attachment" "deny_deleting_cloudwatch_logs" {
+  count = length(var.deny_deleting_cloudwatch_logs_target_ids)
+
+  policy_id = aws_organizations_policy.deny_deleting_cloudwatch_logs.id
+  target_id = element(var.deny_deleting_cloudwatch_logs_target_ids)
+}
