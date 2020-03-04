@@ -53,8 +53,8 @@ module "org_scps" {
   # applies to all prod accounts
   # - don't allow deleting KMS keys
   # - don't allow deleting Route53 zones
-  deny_deleting_kms_keys_target_ids      = [aws_organizations_organizational_unit.prod.id]
-  deny_deleting_route53_zones_target_ids = [aws_organizations_organizational_unit.prod.id]
+  deny_deleting_kms_keys_target_ids        = [aws_organizations_organizational_unit.prod.id]
+  deny_deleting_route53_zones_target_ids   = [aws_organizations_organizational_unit.prod.id]
   deny_deleting_cloudwatch_logs_target_ids = [aws_organizations_organizational_unit.prod.id]
 
   # applies to all suspended accounts

@@ -209,8 +209,12 @@ resource "aws_organizations_policy_attachment" "require_s3_encryption" {
 
 data "aws_iam_policy_document" "deny_deleting_cloudwatch_logs" {
   statement {
-    effect    = "Deny"
-    actions   = ["ec2:DeleteFlowLogs", "logs:DeleteLogGroup", "logs:DeleteLogStream"]
+    effect = "Deny"
+    actions = [
+      "ec2:DeleteFlowLogs",
+      "logs:DeleteLogGroup",
+      "logs:DeleteLogStream"
+    ]
     resources = ["*"]
   }
 }
