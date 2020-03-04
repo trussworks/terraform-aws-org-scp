@@ -40,7 +40,7 @@ variable "require_s3_encryption_target_ids" {
   default     = []
 }
 
-variable "deny_delete_cloudwatch_logs_target_ids" {
+variable "deny_deleting_cloudwatch_logs_target_ids" {
   description = "Target ids (AWS Account or Organizational Unit) to delete VPC flow logs, log groups, or log streams"
   type        = list(string)
   default     = []

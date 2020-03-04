@@ -55,6 +55,7 @@ module "org_scps" {
   # - don't allow deleting Route53 zones
   deny_deleting_kms_keys_target_ids      = [aws_organizations_organizational_unit.prod.id]
   deny_deleting_route53_zones_target_ids = [aws_organizations_organizational_unit.prod.id]
+  deny_deleting_cloudwatch_logs_target_ids = [aws_organizations_organizational_unit.prod.id]
 
   # applies to all suspended accounts
   # - don't allow any access
@@ -75,7 +76,7 @@ module "org_scps" {
 |------|-------------|------|---------|:-----:|
 | deny\_all\_access\_target\_ids | Target ids (AWS Account or Organizational Unit) to attach an SCP dening all access | `list(string)` | `[]` | no |
 | deny\_creating\_iam\_users\_target\_ids | Target ids (AWS Account or Organizational Unit) to attach an SCP denying the ability to create IAM users or Access Keys | `list(string)` | `[]` | no |
-| deny\_delete\_cloudwatch\_logs\_target\_ids | Target ids (AWS Account or Organizational Unit) to delete VPC flow logs, log groups, or log streams | `list(string)` | `[]` | no |
+| deny\_deleting\_cloudwatch\_logs\_target\_ids | Target ids (AWS Account or Organizational Unit) to delete VPC flow logs, log groups, or log streams | `list(string)` | `[]` | no |
 | deny\_deleting\_kms\_keys\_target\_ids | Target ids (AWS Account or Organizational Unit) to attach an SCP denying deleting KMS keys | `list(string)` | `[]` | no |
 | deny\_deleting\_route53\_zones\_target\_ids | Target ids (AWS Account or Organizational Unit) to attach an SCP denying deleting Route53 Hosted Zones | `list(string)` | `[]` | no |
 | deny\_leaving\_orgs\_target\_ids | Target ids (AWS Account or Organizational Unit) to attach an SCP denying the ability to leave the AWS Organization | `list(string)` | `[]` | no |
