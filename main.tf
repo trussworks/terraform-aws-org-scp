@@ -222,7 +222,7 @@ data "aws_iam_policy_document" "deny_deleting_cloudwatch_logs" {
 resource "aws_organizations_policy" "deny_deleting_cloudwatch_logs" {
   name        = "deny-deleting-cloudwatch-logs"
   description = "Deny deleting Cloudwatch log groups, log streams, and VPC flow logs"
-  content     = data.aws_iam_policy_document.deny_deleting_cloudwatch_logs
+  content     = data.aws_iam_policy_document.deny_deleting_cloudwatch_logs.json
 }
 
 resource "aws_organizations_policy_attachment" "deny_deleting_cloudwatch_logs" {
