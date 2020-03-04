@@ -7,7 +7,7 @@ Inspired by the great work documenting AWS security practices in [asecure.cloud]
 * Deny the ability to delete KMS keys
 * Deny the ability to delete Route53 zones
 * Deny all access to an AWS account
-* Deny the ability to delete VPC flow logs
+* Deny the ability to delete Cloudwatch logs
 
 ## Usage
 
