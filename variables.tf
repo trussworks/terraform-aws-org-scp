@@ -41,7 +41,31 @@ variable "require_s3_encryption_target_ids" {
 }
 
 variable "deny_deleting_cloudwatch_logs_target_ids" {
-  description = "Target ids (AWS Account or Organizational Unit) to delete VPC flow logs, log groups, or log streams"
+  description = "Target ids (AWS Account or Organizational Unit) to attach an SCP denying deletion of CloudWatch, flowlogs,  log groups, or log streams"
   type        = list(string)
   default     = []
+}
+
+variable "protect_s3_bucket_target_ids" {
+  description = "Target ids (AWS Account or Organizational Unit) to attach an SCP protecting S3 buckets and objects"
+  type        = list(string)
+  default     = []
+}
+
+variable "protect_s3_bucket_resources" {
+  description = "S3 bucket resource ARNs to protect from bucket and object deletion"
+  type        = list(string)
+  default     = [""]
+}
+
+variable "protect_iam_role_target_ids" {
+  description = "Target ids (AWS Account or Organizational Unit) to attach an SCP protecting IAM roles"
+  type        = list(string)
+  default     = []
+}
+
+variable "protect_iam_role_resources" {
+  description = "IAM role resource ARNs to protect from modification and deletion"
+  type        = list(string)
+  default     = [""]
 }

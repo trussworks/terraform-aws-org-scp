@@ -231,3 +231,72 @@ resource "aws_organizations_policy_attachment" "deny_deleting_cloudwatch_logs" {
   policy_id = aws_organizations_policy.deny_deleting_cloudwatch_logs.id
   target_id = element(var.deny_deleting_cloudwatch_logs_target_ids.*, count.index)
 }
+
+#
+# Protect S3 Buckets
+#
+
+data "aws_iam_policy_document" "protect_s3_buckets" {
+  statement {
+    effect = "Deny"
+    actions = [
+      "s3:DeleteBucket",
+      "s3:DeleteObject",
+      "s3:DeleteObjectVersion",
+    ]
+    resources = var.protect_s3_bucket_resources
+  }
+}
+
+resource "aws_organizations_policy" "protect_s3_buckets" {
+  count       = length(var.protect_s3_bucket_target_ids)
+  name        = "protect-s3-buckets"
+  description = "Protect S3 buckets form bucket and object deletion"
+  content     = data.aws_iam_policy_document.protect_s3_buckets.json
+}
+
+resource "aws_organizations_policy_attachment" "protect_s3_buckets" {
+  count = length(var.protect_s3_bucket_target_ids)
+
+  policy_id = aws_organizations_policy.protect_s3_buckets[0].id
+  target_id = element(var.protect_s3_bucket_target_ids.*, count.index)
+}
+
+#
+# Protect IAM roles
+#
+
+data "aws_iam_policy_document" "protect_iam_roles" {
+  statement {
+    effect = "Deny"
+    actions = [
+      "iam:AttachRolePolicy",
+      "iam:DeleteRole",
+      "iam:DeleteRolePermissionsBoundary",
+      "iam:DeleteRolePolicy",
+      "iam:DetachRolePolicy",
+      "iam:PutRolePermissionsBoundary",
+      "iam:PutRolePolicy",
+      "iam:UpdateAssumeRolePolicy",
+      "iam:UpdateRole",
+      "iam:UpdateRoleDescription"
+    ]
+    resources = var.protect_iam_role_resources
+  }
+}
+
+resource "aws_organizations_policy" "protect_iam_roles" {
+  count = length(var.protect_iam_role_target_ids)
+
+  name        = "protect-iam-roles"
+  description = "Protect IAM roles from modification or deletion"
+  content     = data.aws_iam_policy_document.protect_iam_roles.json
+}
+
+resource "aws_organizations_policy_attachment" "protect_iam_roles" {
+  count = length(var.protect_iam_role_target_ids)
+
+  policy_id = aws_organizations_policy.protect_iam_roles[0].id
+  target_id = element(var.protect_iam_role_target_ids.*, count.index)
+}
+
