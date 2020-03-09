@@ -56,7 +56,7 @@ resource "aws_organizations_organizational_unit" "suspended" {
 
 module "org_scps" {
   source  = "trussworks/org-scp/aws"
-  version = "~> 1.3.0"
+  version = "~> 1.4.0"
 
   # applies to all accounts
   # - don't allow all accounts to be able to leave the org
