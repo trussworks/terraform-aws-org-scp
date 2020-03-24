@@ -286,8 +286,6 @@ data "aws_iam_policy_document" "protect_iam_roles" {
 }
 
 resource "aws_organizations_policy" "protect_iam_roles" {
-  count = length(var.protect_iam_role_target_ids)
-
   name        = "protect-iam-roles"
   description = "Protect IAM roles from modification or deletion"
   content     = data.aws_iam_policy_document.protect_iam_roles.json
@@ -296,7 +294,6 @@ resource "aws_organizations_policy" "protect_iam_roles" {
 resource "aws_organizations_policy_attachment" "protect_iam_roles" {
   count = length(var.protect_iam_role_target_ids)
 
-  policy_id = aws_organizations_policy.protect_iam_roles[0].id
+  policy_id = aws_organizations_policy.protect_iam_roles.id
   target_id = element(var.protect_iam_role_target_ids.*, count.index)
 }
-
