@@ -297,3 +297,50 @@ resource "aws_organizations_policy_attachment" "protect_iam_roles" {
   policy_id = aws_organizations_policy.protect_iam_roles.id
   target_id = element(var.protect_iam_role_target_ids.*, count.index)
 }
+
+#
+# Restrict Regional Operations
+#
+
+data "aws_iam_policy_document" "restrict_regions" {
+  statement {
+    effect = "Deny"
+
+    # These actions do not operate in a specific region, or only run in
+    # a single region, so we don't want to try restricting them by region.
+    not_actions = [
+      "iam:*",
+      "organizations:*",
+      "route53:*",
+      "budgets:*",
+      "waf:*",
+      "cloudfront:*",
+      "globalaccelerator:*",
+      "importexport:*",
+      "support:*",
+      "sts:*"
+    ]
+
+    resources = ["*"]
+    sid       = "LimitRegionsSCP"
+
+    condition {
+      test     = "StringNotEquals"
+      variable = "aws:RequestedRegion"
+      values   = var.restrict_allowed_regions
+    }
+  }
+}
+
+resource "aws_organizations_policy" "restrict_regions" {
+  name        = "restrict-regions"
+  description = "Restrict regions for deployable resources"
+  content     = data.aws_iam_policy_document.restrict_regions
+}
+
+resource "aws_organizations_policy_attachment" "restrict_regions" {
+  count = length(var.restrict_regions_target_ids)
+
+  policy_id = aws_organizations_policy.restrict_regions.id
+  target_id = element(var.restrict_regions_target_ids.*, count.index)
+}

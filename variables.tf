@@ -69,3 +69,15 @@ variable "protect_iam_role_resources" {
   type        = list(string)
   default     = [""]
 }
+
+variable "restrict_regions_target_ids" {
+  description = "Target ids (AWS Account or Organizational Unit) to attach an SCP restricting regions."
+  type        = list(string)
+  default     = []
+}
+
+variable "allowed_regions" {
+  description = "AWS Regions allowed for use (for use with the restrict regions SCP)"
+  type        = list(string)
+  default     = [""]
+}

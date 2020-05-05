@@ -97,6 +97,12 @@ module "org_scps" {
 ```
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+## Requirements
+
+| Name | Version |
+|------|---------|
+| terraform | >= 0.12 |
+
 ## Providers
 
 | Name | Version |
@@ -106,7 +112,8 @@ module "org_scps" {
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:-----:|
+|------|-------------|------|---------|:--------:|
+| allowed\_regions | AWS Regions allowed for use (for use with the restrict regions SCP) | `list(string)` | <pre>[<br>  ""<br>]</pre> | no |
 | deny\_all\_access\_target\_ids | Target ids (AWS Account or Organizational Unit) to attach an SCP dening all access | `list(string)` | `[]` | no |
 | deny\_creating\_iam\_users\_target\_ids | Target ids (AWS Account or Organizational Unit) to attach an SCP denying the ability to create IAM users or Access Keys | `list(string)` | `[]` | no |
 | deny\_deleting\_cloudwatch\_logs\_target\_ids | Target ids (AWS Account or Organizational Unit) to attach an SCP denying deletion of CloudWatch, flowlogs,  log groups, or log streams | `list(string)` | `[]` | no |
@@ -119,6 +126,7 @@ module "org_scps" {
 | protect\_s3\_bucket\_resources | S3 bucket resource ARNs to protect from bucket and object deletion | `list(string)` | <pre>[<br>  ""<br>]</pre> | no |
 | protect\_s3\_bucket\_target\_ids | Target ids (AWS Account or Organizational Unit) to attach an SCP protecting S3 buckets and objects | `list(string)` | `[]` | no |
 | require\_s3\_encryption\_target\_ids | Target ids (AWS Account or Organizational Unit) to attach an SCP requiring S3 encryption | `list(string)` | `[]` | no |
+| restrict\_regions\_target\_ids | Target ids (AWS Account or Organizational Unit) to attach an SCP restricting regions. | `list(string)` | `[]` | no |
 
 ## Outputs
 
