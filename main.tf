@@ -335,7 +335,7 @@ data "aws_iam_policy_document" "restrict_regions" {
 resource "aws_organizations_policy" "restrict_regions" {
   name        = "restrict-regions"
   description = "Restrict regions for deployable resources"
-  content     = data.aws_iam_policy_document.restrict_regions
+  content     = data.aws_iam_policy_document.restrict_regions.json
 }
 
 resource "aws_organizations_policy_attachment" "restrict_regions" {
