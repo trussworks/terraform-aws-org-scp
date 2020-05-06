@@ -327,7 +327,7 @@ data "aws_iam_policy_document" "restrict_regions" {
     condition {
       test     = "StringNotEquals"
       variable = "aws:RequestedRegion"
-      values   = var.restrict_allowed_regions
+      values   = var.allowed_regions
     }
   }
 }

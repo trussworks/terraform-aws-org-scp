@@ -56,15 +56,18 @@ resource "aws_organizations_organizational_unit" "suspended" {
 
 module "org_scps" {
   source  = "trussworks/org-scp/aws"
-  version = "~> 1.4.0"
+  version = "~> 1.6.1"
 
   # applies to all accounts
   # - don't allow all accounts to be able to leave the org
   # - don't allow access to the root user
   # - require s3 objects be encrypted
+  # - restrict region-specific operations to us-west-2
   deny_root_account_target_ids     = [aws_organizations_organizational_unit.root.id]
   deny_leaving_orgs_target_ids     = [aws_organizations_organizational_unit.root.id]
   require_s3_encryption_target_ids = [aws_organizations_organizational_unit.root.id]
+  allowed_regions                  = ["us-west-2"]
+  restrict_regions_target_ids      = [aws_organizations_organizational_unit.root.id]
 
   # applies to accounts that are not managing IAM users
   # - don't allow creating IAM users or access keys
