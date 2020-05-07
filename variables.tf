@@ -61,7 +61,7 @@ variable "protect_s3_bucket_resources" {
 variable "protect_iam_role_target_ids" {
   description = "Target ids (AWS Account or Organizational Unit) to attach an SCP protecting IAM roles"
   type        = list(string)
-  default     = [""]
+  default     = []
 }
 
 variable "protect_iam_role_resources" {
