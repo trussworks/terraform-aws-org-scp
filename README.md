@@ -124,8 +124,8 @@ module "org_scps" {
 | deny\_deleting\_route53\_zones\_target\_ids | Target ids (AWS Account or Organizational Unit) to attach an SCP denying deleting Route53 Hosted Zones | `list(string)` | `[]` | no |
 | deny\_leaving\_orgs\_target\_ids | Target ids (AWS Account or Organizational Unit) to attach an SCP denying the ability to leave the AWS Organization | `list(string)` | `[]` | no |
 | deny\_root\_account\_target\_ids | Target ids (AWS Account or Organizational Unit) to attach an SCP denying the root user from taking any action | `list(string)` | `[]` | no |
-| protect\_iam\_role\_resources | IAM role resource ARNs to protect from modification and deletion | `list(string)` | <pre>[<br>  ""<br>]</pre> | no |
-| protect\_iam\_role\_target\_ids | Target ids (AWS Account or Organizational Unit) to attach an SCP protecting IAM roles | `list(string)` | <pre>[<br>  ""<br>]</pre> | no |
+| protect\_iam\_role\_resources | IAM role resource ARNs to protect from modification and deletion | `list(string)` | `[]` | no |
+| protect\_iam\_role\_target\_ids | Target ids (AWS Account or Organizational Unit) to attach an SCP protecting IAM roles | `list(string)` | `[]` | no |
 | protect\_s3\_bucket\_resources | S3 bucket resource ARNs to protect from bucket and object deletion | `list(string)` | <pre>[<br>  ""<br>]</pre> | no |
 | protect\_s3\_bucket\_target\_ids | Target ids (AWS Account or Organizational Unit) to attach an SCP protecting S3 buckets and objects | `list(string)` | `[]` | no |
 | require\_s3\_encryption\_target\_ids | Target ids (AWS Account or Organizational Unit) to attach an SCP requiring S3 encryption | `list(string)` | `[]` | no |
