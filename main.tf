@@ -267,7 +267,7 @@ resource "aws_organizations_policy_attachment" "protect_s3_buckets" {
 #
 
 data "aws_iam_policy_document" "protect_iam_roles" {
-  count = var.protect_iam_role_resources != [""] ? 1 : 0
+  count = length(var.protect_iam_role_resources) != 0 ? 1 : 0
 
   statement {
     effect = "Deny"
@@ -288,7 +288,7 @@ data "aws_iam_policy_document" "protect_iam_roles" {
 }
 
 resource "aws_organizations_policy" "protect_iam_roles" {
-  count = var.protect_iam_role_resources != [""] ? 1 : 0
+  count = length(var.protect_iam_role_resources) != 0 ? 1 : 0
 
   name        = "protect-iam-roles"
   description = "Protect IAM roles from modification or deletion"

@@ -67,7 +67,7 @@ variable "protect_iam_role_target_ids" {
 variable "protect_iam_role_resources" {
   description = "IAM role resource ARNs to protect from modification and deletion"
   type        = list(string)
-  default     = [""]
+  default     = []
 }
 
 variable "restrict_regions_target_ids" {
