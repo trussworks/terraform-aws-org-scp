@@ -1,5 +1,7 @@
 # AWS Organization SCP Terraform Module
 
+**NOTE:** This module has been **ARCHIVED** and should not be used. Please switch to using the [terraform-aws-ou-scp](https://github.com/trussworks/terraform-aws-ou-scp) module instead.
+
 Inspired by the great work documenting AWS security practices in [asecure.cloud](https://asecure.cloud/whatsnew), this module is meant to define common Service Control Policies (SCP) to apply to accounts or Organizational Units (OU) in an AWS Organization. The following policies are supported
 
 ## Organizations
